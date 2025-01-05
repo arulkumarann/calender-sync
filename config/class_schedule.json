@@ -1,0 +1,39 @@
+{
+  "1": [
+    { "subject": "PQT", "start_time": "08:00", "end_time": "08:50" },
+    { "subject": "PQT", "start_time": "08:50", "end_time": "09:40" },
+    { "subject": "AI", "start_time": "09:45", "end_time": "10:35" },
+    { "subject": "AI", "start_time": "10:40", "end_time": "11:30" },
+    { "subject": "UHV", "start_time": "11:35", "end_time": "12:25" }
+  ],
+  "2": [
+    { "subject": "DAA", "start_time": "12:30", "end_time": "13:20" },
+    { "subject": "DAA", "start_time": "13:25", "end_time": "14:15" },
+    { "subject": "UHV", "start_time": "14:20", "end_time": "15:10" },
+    { "subject": "UHV", "start_time": "15:10", "end_time": "16:00" },
+    { "subject": "PQT", "start_time": "16:00", "end_time": "16:50" }
+  ],
+  "3": [
+    { "subject": "DIP", "start_time": "08:00", "end_time": "08:50" },
+    { "subject": "DIP", "start_time": "08:50", "end_time": "09:40" },
+    { "subject": "PQT", "start_time": "09:45", "end_time": "10:35" },
+    { "subject": "DBMS", "start_time": "10:40", "end_time": "11:30" },
+    { "subject": "DAA", "start_time": "11:35", "end_time": "12:25" },
+    { "subject": "DAA (L)", "start_time": "13:25", "end_time": "14:15" },
+    { "subject": "DAA (L)", "start_time": "14:20", "end_time": "15:10" }
+  ],
+  "4": [
+    { "subject": "DBMS", "start_time": "12:30", "end_time": "13:20" },
+    { "subject": "DBMS", "start_time": "13:25", "end_time": "14:15" },
+    { "subject": "DAA", "start_time": "14:20", "end_time": "15:10" },
+    { "subject": "SE", "start_time": "15:10", "end_time": "16:00" },
+    { "subject": "DIP", "start_time": "16:00", "end_time": "16:50" }
+  ],
+  "5": [
+    { "subject": "SE", "start_time": "08:00", "end_time": "08:50" },
+    { "subject": "SE", "start_time": "08:50", "end_time": "09:40" },
+    { "subject": "DIP", "start_time": "09:45", "end_time": "10:35" },
+    { "subject": "AI", "start_time": "10:40", "end_time": "11:30" },
+    { "subject": "DBMS", "start_time": "11:35", "end_time": "12:25" }
+  ]
+}
