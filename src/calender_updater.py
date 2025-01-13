@@ -22,6 +22,13 @@ def get_calendar_service():
     creds = service_account.Credentials.from_service_account_info(google_credentials, scopes=SCOPES)
     return build("calendar", "v3", credentials=creds)
 
+def get_calendar_id():
+    """Retrieves calendar ID from environment variables."""
+    calendar_id = os.getenv("CALENDAR_ID")
+    if not calendar_id:
+        raise ValueError("CALENDAR_ID environment variable is not set")
+    return calendar_id
+
 def format_datetime(date, time_str):
     """
     Formats date and time string into proper ISO format.
@@ -34,11 +41,13 @@ def format_datetime(date, time_str):
 
 def get_events_for_specific_date(service, date_str):
     """Get all events for a specific date."""
+    calendar_id = get_calendar_id()
+
     day_start = format_datetime(date_str, "00:00")
     day_end = format_datetime(date_str, "23:59")
     
     events_result = service.events().list(
-        calendarId="arulkumaranp02@gmail.com",
+        calendarId=calendar_id,
         timeMin=day_start,
         timeMax=day_end,
         timeZone="Asia/Kolkata",
@@ -49,6 +58,8 @@ def get_events_for_specific_date(service, date_str):
 
 def delete_all_events_for_date(service, date_str):
     """Delete all events for a specific date."""
+    calendar_id = get_calendar_id()
+
     print(f"Checking for events to delete on {date_str}")
     events = get_events_for_specific_date(service, date_str)
     deleted_count = 0
@@ -56,7 +67,7 @@ def delete_all_events_for_date(service, date_str):
     for event in events:
         try:
             service.events().delete(
-                calendarId="arulkumaranp02@gmail.com",
+                calendarId=calendar_id,
                 eventId=event["id"]
             ).execute()
             deleted_count += 1
@@ -70,6 +81,7 @@ def delete_all_events_for_date(service, date_str):
         print(f"No events found to delete for {date_str}")
 
 def create_event(service, class_info, date_str, day_order):
+    calendar_id = get_calendar_id()
     """Create a new calendar event."""
     start_datetime = format_datetime(date_str, class_info['start_time'])
     end_datetime = format_datetime(date_str, class_info['end_time'])
@@ -90,7 +102,7 @@ def create_event(service, class_info, date_str, day_order):
     }
     
     try:
-        response = service.events().insert(calendarId="arulkumaranp02@gmail.com", body=event).execute()
+        response = service.events().insert(calendarId=calendar_id, body=event).execute()
         print(f"Added event: {class_info['subject']} on {date_str}")
         return True
     except Exception as e:
