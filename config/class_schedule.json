@@ -1,6 +1,6 @@
 {
   "1": [
-    { "subject": "PQT-Test", "start_time": "08:00", "end_time": "08:50" },
+    { "subject": "PQT", "start_time": "08:00", "end_time": "08:50" },
     { "subject": "PQT", "start_time": "08:50", "end_time": "09:40" },
     { "subject": "AI", "start_time": "09:45", "end_time": "10:35" },
     { "subject": "AI", "start_time": "10:40", "end_time": "11:30" },
