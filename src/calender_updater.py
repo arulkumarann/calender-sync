@@ -95,6 +95,7 @@ def create_event(service, class_info, date_str, day_order):
     start_datetime = format_datetime(date_str, class_info['start_time'])
     end_datetime = format_datetime(date_str, class_info['end_time'])
     subject = class_info["subject"]
+    print(f"Adding event: {subject} on {date_str}")
     
     event = {
         "summary": subject,  
