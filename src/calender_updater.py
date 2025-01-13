@@ -85,7 +85,7 @@ def create_event(service, class_info, date_str, day_order):
     """Create a new calendar event."""
     start_datetime = format_datetime(date_str, class_info['start_time'])
     end_datetime = format_datetime(date_str, class_info['end_time'])
-    base_subject = class_info["subject"].split(" (")[0]
+    #base_subject = class_info["subject"].split(" (")[0]
     
     event = {
         "summary": class_info["subject"],
