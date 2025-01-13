@@ -24,17 +24,17 @@ def get_calendar_service():
 
 def get_calendar_id():
     """Retrieves calendar ID from environment variables."""
-    calendar_id = os.getenv("CALENDAR_ID")
+    calendar_id = os.getenv("CALENDAR_ID")  
     if not calendar_id:
-        raise ValueError("CALENDAR_ID environment variable is not set")
-    return calendar_id
+        raise ValueError("GOOGLE_CALENDAR_ID environment variable is not set")
+    return calendar_id.strip()
 
 def format_datetime(date, time_str):
     """
     Formats date and time string into proper ISO format.
     Returns datetime string in format: YYYY-MM-DDTHH:mm:ss+05:30
     """
-    if len(time_str) == 4:  # If time is like "9:30"
+    if len(time_str) == 4:  
         time_str = f"0{time_str}"
     datetime_str = f"{date}T{time_str}:00+05:30"
     return datetime_str
@@ -42,7 +42,6 @@ def format_datetime(date, time_str):
 def get_events_for_specific_date(service, date_str):
     """Get all events for a specific date."""
     calendar_id = get_calendar_id()
-
     day_start = format_datetime(date_str, "00:00")
     day_end = format_datetime(date_str, "23:59")
     
@@ -59,7 +58,6 @@ def get_events_for_specific_date(service, date_str):
 def delete_all_events_for_date(service, date_str):
     """Delete all events for a specific date."""
     calendar_id = get_calendar_id()
-
     print(f"Checking for events to delete on {date_str}")
     events = get_events_for_specific_date(service, date_str)
     deleted_count = 0
@@ -80,15 +78,26 @@ def delete_all_events_for_date(service, date_str):
     else:
         print(f"No events found to delete for {date_str}")
 
+def get_subject_color(subject):
+    """
+    Gets the color ID for a subject, handling cases with suffixes.
+    Example: "PQT -Test" should use the color for "PQT"
+    """
+    if subject in SUBJECT_COLORS:
+        return SUBJECT_COLORS[subject]
+    
+    base_subject = subject.split()[0].split('-')[0].strip()
+    return SUBJECT_COLORS.get(base_subject, "8")  
+
 def create_event(service, class_info, date_str, day_order):
-    calendar_id = get_calendar_id()
     """Create a new calendar event."""
+    calendar_id = get_calendar_id()
     start_datetime = format_datetime(date_str, class_info['start_time'])
     end_datetime = format_datetime(date_str, class_info['end_time'])
-    #base_subject = class_info["subject"].split(" (")[0]
+    subject = class_info["subject"]
     
     event = {
-        "summary": class_info["subject"],
+        "summary": subject,  
         "description": f"Day Order {day_order}",
         "start": {
             "dateTime": start_datetime,
@@ -98,12 +107,12 @@ def create_event(service, class_info, date_str, day_order):
             "dateTime": end_datetime,
             "timeZone": "Asia/Kolkata"
         },
-        "colorId": SUBJECT_COLORS.get(base_subject, "8")
+        "colorId": get_subject_color(subject)
     }
     
     try:
         response = service.events().insert(calendarId=calendar_id, body=event).execute()
-        print(f"Added event: {class_info['subject']} on {date_str}")
+        print(f"Added event: {subject} on {date_str}")
         return True
     except Exception as e:
         print(f"Error adding event: {str(e)}")
@@ -111,7 +120,6 @@ def create_event(service, class_info, date_str, day_order):
 
 def update_calendar():
     """Update the calendar with the latest schedule and handle holidays."""
-    
     # Get new schedule
     day_orders = get_next_5_day_orders()
     if not day_orders:
@@ -134,7 +142,6 @@ def update_calendar():
             all_dates_in_range.add(str(current_date))
             current_date += 1
         
-        # Find dates that are in the range but not in day_orders (holidays)
         scheduled_dates = set(day_orders.keys())
         holiday_dates = all_dates_in_range - scheduled_dates
         
@@ -142,14 +149,12 @@ def update_calendar():
         print(f"Date range: {min_date} to {max_date}")
         print(f"Found {len(holiday_dates)} holidays in the range")
         
-        # First, handle holidays (missing dates)
         for date_num in holiday_dates:
             event_date = today + timedelta(days=int(date_num) - today.day)
             formatted_date = event_date.strftime("%Y-%m-%d")
             print(f"\nProcessing holiday on {formatted_date}")
             delete_all_events_for_date(service, formatted_date)
         
-        # Then handle regular days
         class_schedule = load_class_schedule()
         if not class_schedule:
             return
@@ -160,10 +165,8 @@ def update_calendar():
             
             print(f"\nProcessing regular day {formatted_date} (Day Order: {day_order})")
             
-            # First delete any existing events
             delete_all_events_for_date(service, formatted_date)
             
-            # Then add new events if it's a regular day
             if str(day_order) in class_schedule:
                 for class_info in class_schedule[str(day_order)]:
                     create_event(service, class_info, formatted_date, day_order)
