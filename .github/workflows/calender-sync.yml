@@ -30,6 +30,7 @@ jobs:
       env:
         API_URL: ${{ secrets.API_URL }}
         GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+        CALENDAR_ID: ${{ secrets.CALENDAR_ID }}
       working-directory: .
       run: |
         python src/calender_updater.py
